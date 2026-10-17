@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-primary-950 text-neutral2-100 font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  ::selection {
+    @apply bg-primary-500/40 text-white;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-700/60 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-600;
+  }
+
+  /* Range slider styling */
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    @apply bg-transparent w-full cursor-pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    @apply h-1.5 rounded-full bg-primary-800;
+  }
+  input[type='range']::-moz-range-track {
+    @apply h-1.5 rounded-full bg-primary-800;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    @apply h-4 w-4 rounded-full bg-accent-400 shadow-lift border-2 border-primary-950;
+  }
+  input[type='range']::-moz-range-thumb {
+    @apply h-4 w-4 rounded-full bg-accent-400 border-2 border-primary-950;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply bg-primary-900/60 border border-primary-800/70 rounded-2xl;
+  }
+  .surface-raised {
+    @apply bg-primary-900/80 border border-primary-800/70 rounded-2xl shadow-card;
+  }
+  .label-eyebrow {
+    @apply text-2xs font-semibold uppercase tracking-[0.18em] text-neutral2-400;
+  }
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950;
+  }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
