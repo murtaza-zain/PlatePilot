@@ -86,10 +86,12 @@ export function estimateParticipationRate(
   observations: Observation[],
 ): { rate: number; usable: number; weight: number } {
   const usable = observations.filter(
-    (o) =>
+    (o): o is Observation & { attendance: number; actualDemand: number } =>
       o.completed === true &&
+      o.attendance != null &&
       Number.isFinite(o.attendance) &&
       o.attendance > 0 &&
+      o.actualDemand != null &&
       Number.isFinite(o.actualDemand) &&
       o.actualDemand >= 0,
   );
@@ -98,7 +100,7 @@ export function estimateParticipationRate(
     return { rate: clamp(configuredRate, 0, 1), usable: usable.length, weight: 0 };
   }
 
-  const ratios = usable.map((o) => o.actualDemand! / o.attendance!);
+  const ratios = usable.map((o) => o.actualDemand / o.attendance);
   const historicalRate = clamp(mean(ratios), 0, 1);
 
   // Blend: with enough history, lean toward historical; otherwise configured.
@@ -116,9 +118,11 @@ export function estimateDemandStdDev(
   observations: Observation[],
 ): { stdDev: number; fromFallback: boolean; usable: number } {
   const usable = observations.filter(
-    (o) =>
+    (o): o is Observation & { attendance: number; actualDemand: number } =>
       o.completed === true &&
+      o.actualDemand != null &&
       Number.isFinite(o.actualDemand) &&
+      o.attendance != null &&
       Number.isFinite(o.attendance) &&
       o.attendance > 0,
   );
@@ -132,12 +136,12 @@ export function estimateDemandStdDev(
   }
 
   // Variability of the demand-to-attendance ratio, scaled to current mean.
-  const ratios = usable.map((o) => o.actualDemand! / o.attendance!);
+  const ratios = usable.map((o) => o.actualDemand / o.attendance);
   const ratioStd = sampleStdDev(ratios);
   // Also account for absolute demand noise around the ratio prediction.
   const absResiduals = usable.map((o) => {
-    const pred = (o.actualDemand! / o.attendance!) * o.attendance!; // = actualDemand
-    return o.actualDemand! - pred;
+    const pred = (o.actualDemand / o.attendance) * o.attendance; // = actualDemand
+    return o.actualDemand - pred;
   });
   // ratioStd * meanAttendance is the dominant term; add small abs residual noise.
   const ratioComponent = ratioStd * meanDemand;

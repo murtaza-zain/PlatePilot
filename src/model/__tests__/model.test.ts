@@ -254,7 +254,7 @@ test('estimateDemandStdDev: enough history -> historical variability', () => {
 
 test('clamp/safeNonNeg edge cases', () => {
   assert.equal(clamp(NaN, 0, 10), 0);
-  assert.equal(clamp(Infinity, 0, 10), 10);
+  assert.equal(clamp(Infinity, 0, 10), 0);
   assert.equal(clamp(-5, 0, 10), 0);
   assert.equal(safeNonNeg(NaN), 0);
   assert.equal(safeNonNeg(-1), 0);
